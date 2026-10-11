@@ -1,0 +1,17 @@
+erDiagram
+    USERS ||--o{ EVENTS : owns
+    USERS ||--o{ VENUES : owns
+    USERS ||--o{ EVENT_STAFF : assigned
+    USERS ||--o{ REGISTRATIONS : participates
+    VENUES ||--o{ ROOMS : contains
+    EVENTS ||--o{ EVENT_STAFF : has
+    EVENTS ||--o{ EVENT_ROOMS : uses
+    ROOMS ||--o{ EVENT_ROOMS : allocated
+    EVENT_ROOMS ||--o{ PROGRAM_ITEMS : hosts
+    EVENTS ||--o{ REGISTRATIONS : receives
+    REGISTRATIONS ||--o{ TICKETS : issues
+    REGISTRATIONS ||--o| CHECK_INS : admits
+    TICKETS ||--o| CHECK_INS : confirms
+    EVENTS ||--o{ SCAN_ATTEMPTS : records
+    USERS ||--o{ SCAN_ATTEMPTS : scans
+    TICKETS o|--o{ SCAN_ATTEMPTS : resolves
