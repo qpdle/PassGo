@@ -72,4 +72,4 @@ docs/       модель данных, схемы и правила разраб
 infra/      контейнеры и конфигурация стенда
 ```
 
-Порядок работы и критерии готовности описаны в [docs/development.md](docs/development.md). Пример серверных настроек находится в [.env.example](.env.example), клиентских — в [frontend/.env.example](frontend/.env.example). Версии серверных библиотек закреплены в `backend/requirements.txt`, клиентских — в `frontend/package.json`. Это подготовка структуры; исходники приложения и команды его запуска добавляются в S1-08 и S1-11.
+Порядок работы и критерии готовности описаны в [docs/development.md](docs/development.md). Пример серверных настроек находится в [.env.example](.env.example), клиентских — в [frontend/.env.example](frontend/.env.example). Версии серверных библиотек закреплены в `backend/requirements.txt`, клиентских — в `frontend/package.json`. Локальный серверный каркас S1-08 и инструкция запуска находятся в backend/README.md. Docker Compose размещён в корне. React приложение добавляется в S1-11.
