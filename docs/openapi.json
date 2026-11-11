@@ -3,7 +3,7 @@
   "info": {
     "title": "PassGo API",
     "version": "0.1.0",
-    "description": "Контракт первого спринта. Health и тестовый список реализованы. Остальные бизнес маршруты запланированы."
+    "description": "API PassGo. Аккаунты, мероприятия, площадки, помещения, программа и сотрудники реализованы. Регистрация участников, билеты, посещения и статистика запланированы."
   },
   "servers": [
     {
@@ -101,7 +101,7 @@
         "operationId": "csrf",
         "summary": "Получить CSRF токен",
         "x-planned-sprint": 2,
-        "x-implementation-status": "planned",
+        "x-implementation-status": "implemented",
         "x-access": "public",
         "security": [],
         "parameters": [],
@@ -164,7 +164,7 @@
         "operationId": "signup",
         "summary": "Создать аккаунт",
         "x-planned-sprint": 2,
-        "x-implementation-status": "planned",
+        "x-implementation-status": "implemented",
         "x-access": "public",
         "security": [],
         "parameters": [
@@ -295,7 +295,7 @@
         "operationId": "login",
         "summary": "Открыть сессию",
         "x-planned-sprint": 2,
-        "x-implementation-status": "planned",
+        "x-implementation-status": "implemented",
         "x-access": "public",
         "security": [],
         "parameters": [
@@ -426,7 +426,7 @@
         "operationId": "logout",
         "summary": "Закрыть сессию",
         "x-planned-sprint": 2,
-        "x-implementation-status": "planned",
+        "x-implementation-status": "implemented",
         "x-access": "authenticated",
         "security": [
           {
@@ -544,7 +544,7 @@
         "operationId": "me",
         "summary": "Текущий пользователь",
         "x-planned-sprint": 2,
-        "x-implementation-status": "planned",
+        "x-implementation-status": "implemented",
         "x-access": "authenticated",
         "security": [
           {
@@ -660,7 +660,7 @@
         "operationId": "events_list",
         "summary": "Публичные мероприятия",
         "x-planned-sprint": 2,
-        "x-implementation-status": "planned",
+        "x-implementation-status": "implemented",
         "x-access": "public",
         "security": [],
         "parameters": [
@@ -760,7 +760,7 @@
         "operationId": "event_create",
         "summary": "Создать черновик",
         "x-planned-sprint": 2,
-        "x-implementation-status": "planned",
+        "x-implementation-status": "implemented",
         "x-access": "authenticated",
         "security": [
           {
@@ -895,7 +895,7 @@
         "operationId": "event_get",
         "summary": "Прочитать мероприятие",
         "x-planned-sprint": 2,
-        "x-implementation-status": "planned",
+        "x-implementation-status": "implemented",
         "x-access": "public_or_owner",
         "security": [
           {},
@@ -1023,7 +1023,7 @@
         "operationId": "event_update",
         "summary": "Изменить разрешённые поля",
         "x-planned-sprint": 2,
-        "x-implementation-status": "planned",
+        "x-implementation-status": "implemented",
         "x-access": "owner",
         "security": [
           {
@@ -1169,7 +1169,7 @@
         "operationId": "event_publish",
         "summary": "Опубликовать черновик",
         "x-planned-sprint": 2,
-        "x-implementation-status": "planned",
+        "x-implementation-status": "implemented",
         "x-access": "owner",
         "security": [
           {
@@ -1305,7 +1305,7 @@
         "operationId": "event_cancel",
         "summary": "Отменить мероприятие",
         "x-planned-sprint": 2,
-        "x-implementation-status": "planned",
+        "x-implementation-status": "implemented",
         "x-access": "owner",
         "security": [
           {
@@ -1441,7 +1441,7 @@
         "operationId": "own_events",
         "summary": "Свои мероприятия",
         "x-planned-sprint": 2,
-        "x-implementation-status": "planned",
+        "x-implementation-status": "implemented",
         "x-access": "authenticated",
         "security": [
           {
@@ -1577,7 +1577,7 @@
         "operationId": "venues_list",
         "summary": "Свои площадки",
         "x-planned-sprint": 2,
-        "x-implementation-status": "planned",
+        "x-implementation-status": "implemented",
         "x-access": "authenticated",
         "security": [
           {
@@ -1711,7 +1711,7 @@
         "operationId": "venue_create",
         "summary": "Создать площадку",
         "x-planned-sprint": 2,
-        "x-implementation-status": "planned",
+        "x-implementation-status": "implemented",
         "x-access": "authenticated",
         "security": [
           {
@@ -1846,7 +1846,7 @@
         "operationId": "venue_update",
         "summary": "Изменить свою площадку",
         "x-planned-sprint": 2,
-        "x-implementation-status": "planned",
+        "x-implementation-status": "implemented",
         "x-access": "venue_owner",
         "security": [
           {
@@ -1985,6 +1985,256 @@
             }
           }
         }
+      },
+      "get": {
+        "operationId": "venue_detail",
+        "summary": "Своя площадка",
+        "x-planned-sprint": 2,
+        "x-implementation-status": "implemented",
+        "x-access": "venue_owner",
+        "security": [
+          {
+            "session": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "venue_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "pattern": "^[1-9][0-9]*$"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Успех",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Venue"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "validation_error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "not_authenticated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "headers": {
+              "WWW-Authenticate": {
+                "schema": {
+                  "type": "string",
+                  "example": "Session realm=\"PassGo\""
+                },
+                "description": "Планируемый ответ адаптера SessionAuthentication"
+              }
+            }
+          },
+          "403": {
+            "description": "permission_denied или csrf_failed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "not_found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "405": {
+            "description": "method_not_allowed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Конфликт бизнес правил",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "rate_limited",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "internal_error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "description": "Площадка доступна только владельцу."
+      },
+      "delete": {
+        "operationId": "venue_delete",
+        "summary": "Удалить площадку без помещений",
+        "x-planned-sprint": 2,
+        "x-implementation-status": "implemented",
+        "x-access": "venue_owner",
+        "security": [
+          {
+            "session": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "venue_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "pattern": "^[1-9][0-9]*$"
+            }
+          },
+          {
+            "name": "X-CSRFToken",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Успех"
+          },
+          "400": {
+            "description": "validation_error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "not_authenticated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "headers": {
+              "WWW-Authenticate": {
+                "schema": {
+                  "type": "string",
+                  "example": "Session realm=\"PassGo\""
+                },
+                "description": "Планируемый ответ адаптера SessionAuthentication"
+              }
+            }
+          },
+          "403": {
+            "description": "permission_denied или csrf_failed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "not_found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "405": {
+            "description": "method_not_allowed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Конфликт бизнес правил",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "rate_limited",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "internal_error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
       }
     },
     "/venues/{venue_id}/rooms/": {
@@ -1992,7 +2242,7 @@
         "operationId": "rooms_list",
         "summary": "Помещения площадки",
         "x-planned-sprint": 2,
-        "x-implementation-status": "planned",
+        "x-implementation-status": "implemented",
         "x-access": "venue_owner",
         "security": [
           {
@@ -2137,7 +2387,7 @@
         "operationId": "room_create",
         "summary": "Добавить помещение",
         "x-planned-sprint": 2,
-        "x-implementation-status": "planned",
+        "x-implementation-status": "implemented",
         "x-access": "venue_owner",
         "security": [
           {
@@ -2283,7 +2533,7 @@
         "operationId": "room_update",
         "summary": "Изменить помещение",
         "x-planned-sprint": 2,
-        "x-implementation-status": "planned",
+        "x-implementation-status": "implemented",
         "x-access": "venue_owner",
         "security": [
           {
@@ -2438,7 +2688,7 @@
         "operationId": "room_delete",
         "summary": "Удалить неиспользуемое помещение",
         "x-planned-sprint": 2,
-        "x-implementation-status": "planned",
+        "x-implementation-status": "implemented",
         "x-access": "venue_owner",
         "security": [
           {
@@ -2578,7 +2828,7 @@
         "operationId": "event_rooms",
         "summary": "Помещения мероприятия",
         "x-planned-sprint": 2,
-        "x-implementation-status": "planned",
+        "x-implementation-status": "implemented",
         "x-access": "public_or_owner",
         "security": [
           {},
@@ -2725,7 +2975,7 @@
         "operationId": "event_room_add",
         "summary": "Назначить своё помещение",
         "x-planned-sprint": 2,
-        "x-implementation-status": "planned",
+        "x-implementation-status": "implemented",
         "x-access": "owner",
         "security": [
           {
@@ -2871,7 +3121,7 @@
         "operationId": "event_room_remove",
         "summary": "Снять назначение в черновике",
         "x-planned-sprint": 2,
-        "x-implementation-status": "planned",
+        "x-implementation-status": "implemented",
         "x-access": "owner",
         "security": [
           {
@@ -3011,7 +3261,7 @@
         "operationId": "program_list",
         "summary": "Программа мероприятия",
         "x-planned-sprint": 2,
-        "x-implementation-status": "planned",
+        "x-implementation-status": "implemented",
         "x-access": "public_or_owner",
         "security": [
           {},
@@ -3158,7 +3408,7 @@
         "operationId": "program_create",
         "summary": "Добавить выступление",
         "x-planned-sprint": 2,
-        "x-implementation-status": "planned",
+        "x-implementation-status": "implemented",
         "x-access": "owner",
         "security": [
           {
@@ -3304,7 +3554,7 @@
         "operationId": "program_update",
         "summary": "Изменить выступление",
         "x-planned-sprint": 2,
-        "x-implementation-status": "planned",
+        "x-implementation-status": "implemented",
         "x-access": "owner",
         "security": [
           {
@@ -3459,7 +3709,7 @@
         "operationId": "program_delete",
         "summary": "Удалить выступление",
         "x-planned-sprint": 2,
-        "x-implementation-status": "planned",
+        "x-implementation-status": "implemented",
         "x-access": "owner",
         "security": [
           {
@@ -3599,7 +3849,7 @@
         "operationId": "staff_list",
         "summary": "Назначенные сотрудники",
         "x-planned-sprint": 2,
-        "x-implementation-status": "planned",
+        "x-implementation-status": "implemented",
         "x-access": "owner",
         "security": [
           {
@@ -3744,7 +3994,7 @@
         "operationId": "staff_add",
         "summary": "Назначить существующего пользователя",
         "x-planned-sprint": 2,
-        "x-implementation-status": "planned",
+        "x-implementation-status": "implemented",
         "x-access": "owner",
         "security": [
           {
@@ -3890,7 +4140,7 @@
         "operationId": "staff_remove",
         "summary": "Снять назначение",
         "x-planned-sprint": 2,
-        "x-implementation-status": "planned",
+        "x-implementation-status": "implemented",
         "x-access": "owner",
         "security": [
           {
@@ -5388,7 +5638,8 @@
             "type": "string",
             "format": "password",
             "minLength": 8,
-            "writeOnly": true
+            "writeOnly": true,
+            "maxLength": 128
           }
         },
         "required": [
@@ -5408,7 +5659,8 @@
           "password": {
             "type": "string",
             "format": "password",
-            "writeOnly": true
+            "writeOnly": true,
+            "maxLength": 128
           }
         },
         "required": [
@@ -5454,7 +5706,8 @@
           },
           "capacity": {
             "type": "integer",
-            "minimum": 1
+            "minimum": 1,
+            "maximum": 2147483647
           }
         },
         "required": [
@@ -5666,7 +5919,8 @@
           },
           "capacity": {
             "type": "integer",
-            "minimum": 1
+            "minimum": 1,
+            "maximum": 2147483647
           }
         },
         "required": [

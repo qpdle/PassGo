@@ -1,9 +1,9 @@
 # Контракт API PassGo
 
-Результат S1-06. Подготовил Орлов Даниил.
-Здесь описаны запросы и ответы API. Работающие и будущие маршруты отмечены отдельно. Основа — сценарии S1-03, модель S1-05 и правила S1-04.
+Контракт API. Подготовил Орлов Даниил.
+Здесь описаны запросы и ответы API. Работающие и будущие маршруты отмечены отдельно. Основа — сценарии S1-03, модель S1-05 и правила S1-04. Маршруты аккаунтов, мероприятий, площадок, помещений, программы и сотрудников реализованы во втором спринте. Регистрация участников, билеты, вход и статистика пока запланированы.
 
-## Общие соглашения
+## Общие правила
 
 Префикс /api/v1. JSON UTF-8; имена snake_case. Идентификаторы bigint в запросах и ответах — десятичные строки. Даты RFC 3339 с часовым поясом; сервер возвращает UTC с Z, интерфейс отображает в timezone события. Окна времени полуоткрытые. Поля записи, не объявленные схемой, отклоняются с 400, серверные id, owner_id, status и отметки времени клиент не задаёт. PATCH принимает только изменяемые поля; пустой PATCH — 400.
 
@@ -13,7 +13,7 @@
 
 Frontend и API размещаются на одном origin; при локальной работе API проксируется через Vite. Запросы отправляются с credentials: same-origin. Session cookie sessionid — HttpOnly, Secure на HTTPS, SameSite=Lax. Пароль и токен сессии не сохраняются в localStorage. Перед первым изменяющим запросом GET /auth/csrf/ устанавливает csrftoken и возвращает csrf_token. Клиент отправляет его в X-CSRFToken при POST, PATCH, DELETE, включая signup, login и logout. После успешного login токен обновляется: повторить GET /auth/csrf/. Login защищается CSRF отдельно и для анонимного пользователя. GET никогда не меняет бизнес данные.
 
-Требуемое различие: 401 not_authenticated — сессии нет или она истекла; 403 permission_denied — сессия есть, но права отсутствуют; 403 csrf_failed — CSRF не прошёл. Для этого потребуется адаптер SessionAuthentication с authenticate_header, возвращающим Session realm="PassGo", и единый обработчик ошибок. Стандартный DRF SessionAuthentication без адаптера может отвечать 403 вместо 401: это не считается соответствием контракту. Заголовок Authorization: Session не используется; сессия передаётся cookie. Неверные данные login: 401 invalid_credentials, без уточнения существования email. CSRF проверяется до операции; при его отказе возможен 403 раньше проверки сессии. Настройка Django CSRF_FAILURE_VIEW нужна для единого JSON вне DRF.
+Требуемое различие: 401 not_authenticated — сессии нет или она истекла; 403 permission_denied — сессия есть, но права отсутствуют; 403 csrf_failed — CSRF не прошёл. Для этого используется адаптер SessionAuthentication с authenticate_header, возвращающим Session realm="PassGo", и единый обработчик ошибок. Стандартный DRF SessionAuthentication без адаптера может отвечать 403 вместо 401: это не считается соответствием контракту. Заголовок Authorization: Session не используется; сессия передаётся cookie. Неверные данные login: 401 invalid_credentials, без уточнения существования email. CSRF проверяется до операции; при его отказе возможен 403 раньше проверки сессии. Настройка Django CSRF_FAILURE_VIEW нужна для единого JSON вне DRF.
 
 ## Доступ
 
@@ -43,7 +43,9 @@ public — всем; authenticated — вошедшим; owner — органи�
 | GET /api/v1/me/events/ | authenticated | 2 | Свои мероприятия |
 | GET /api/v1/venues/ | authenticated | 2 | Свои площадки |
 | POST /api/v1/venues/ | authenticated | 2 | Создать площадку |
+| GET /api/v1/venues/{venue_id}/ | venue_owner | 2 | Читать свою площадку |
 | PATCH /api/v1/venues/{venue_id}/ | venue_owner | 2 | Изменить свою площадку |
+| DELETE /api/v1/venues/{venue_id}/ | venue_owner | 2 | Удалить площадку без помещений |
 | GET /api/v1/venues/{venue_id}/rooms/ | venue_owner | 2 | Помещения площадки |
 | POST /api/v1/venues/{venue_id}/rooms/ | venue_owner | 2 | Добавить помещение |
 | PATCH /api/v1/venues/{venue_id}/rooms/{room_id}/ | venue_owner | 2 | Изменить помещение |
@@ -231,3 +233,7 @@ HTTP 403
 
 DRF Authentication: https://www.django-rest-framework.org/api-guide/authentication/
 Django CSRF: https://docs.djangoproject.com/en/5.2/howto/csrf/
+
+## Текущее ограничение отмены
+
+Во втором спринте отмена меняет состояние мероприятия. Регистраций участников и билетов ещё нет. При их добавлении отмена должна в той же транзакции отменять активные регистрации и отзывать билеты, сохраняя историю посещений.

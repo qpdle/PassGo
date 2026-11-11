@@ -140,3 +140,64 @@ class Event(models.Model):
 
     def __str__(self):
         return self.title
+
+
+class EventRoom(models.Model):
+    event = models.ForeignKey(
+        Event, on_delete=models.PROTECT, related_name="event_rooms"
+    )
+    room = models.ForeignKey(Room, on_delete=models.PROTECT, related_name="assignments")
+    name_snapshot = models.CharField(max_length=100)
+    address_snapshot = models.TextField()
+    capacity_snapshot = models.PositiveIntegerField()
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(fields=["event", "room"], name="event_room_unique"),
+            models.CheckConstraint(
+                condition=Q(capacity_snapshot__gt=0),
+                name="event_room_capacity_positive",
+            ),
+        ]
+
+
+class ProgramItem(models.Model):
+    event = models.ForeignKey(Event, on_delete=models.PROTECT, related_name="program")
+    event_room = models.ForeignKey(
+        EventRoom, on_delete=models.PROTECT, related_name="program"
+    )
+    title = models.CharField(max_length=200)
+    description = models.TextField(blank=True)
+    speaker = models.CharField(max_length=200, blank=True)
+    starts_at = models.DateTimeField()
+    ends_at = models.DateTimeField()
+
+    class Meta:
+        constraints = [
+            models.CheckConstraint(
+                condition=Q(starts_at__lt=F("ends_at")), name="program_dates_ordered"
+            )
+        ]
+        indexes = [
+            models.Index(
+                fields=["event_room", "starts_at", "ends_at"],
+                name="program_room_time_idx",
+            )
+        ]
+
+
+class EventStaff(models.Model):
+    event = models.ForeignKey(
+        Event, on_delete=models.PROTECT, related_name="staff_assignments"
+    )
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.PROTECT,
+        related_name="event_assignments",
+    )
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(fields=["event", "user"], name="event_staff_unique")
+        ]

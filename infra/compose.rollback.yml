@@ -1,0 +1,5 @@
+services:
+  backend:
+    image: passgo-stand-backend:s1-backup
+  web:
+    image: passgo-stand-web:s1-backup
