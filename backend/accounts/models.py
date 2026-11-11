@@ -66,3 +66,9 @@ class User(AbstractUser):
 
     def __str__(self):
         return self.email
+
+
+class AuthRateLimit(models.Model):
+    key = models.CharField(max_length=64, primary_key=True)
+    started_at = models.DateTimeField(db_index=True)
+    attempts = models.PositiveIntegerField(default=0)
