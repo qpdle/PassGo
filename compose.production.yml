@@ -1,0 +1,47 @@
+name: passgo-stand
+services:
+  db:
+    image: postgres:17
+    env_file: .env.production
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+    restart: unless-stopped
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile.production
+    env_file: .env.production
+    environment:
+      POSTGRES_HOST: db
+      POSTGRES_PORT: '5432'
+      DJANGO_DEBUG: 'false'
+      DJANGO_BEHIND_PROXY: 'true'
+    volumes:
+      - static_files:/app/staticfiles
+    command: ["sh", "-c", "python manage.py migrate --noinput && python manage.py collectstatic --noinput && exec gunicorn config.wsgi:application --bind 0.0.0.0:8000 --workers 1"]
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: unless-stopped
+  web:
+    build:
+      context: .
+      dockerfile: infra/Dockerfile.web
+    env_file: .env.production
+    ports: ['80:80', '443:443', '443:443/udp']
+    volumes:
+      - caddy_data:/data
+      - caddy_config:/config
+      - static_files:/static:ro
+    depends_on: [backend]
+    restart: unless-stopped
+volumes:
+  postgres_data:
+  static_files:
+  caddy_data:
+  caddy_config:

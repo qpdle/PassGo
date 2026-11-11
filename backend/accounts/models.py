@@ -46,7 +46,9 @@ class User(AbstractUser):
     class Meta:
         verbose_name = "пользователь"
         verbose_name_plural = "пользователи"
-        constraints = [models.UniqueConstraint(Lower("email"), name="user_email_lower_unique")]
+        constraints = [
+            models.UniqueConstraint(Lower("email"), name="user_email_lower_unique")
+        ]
 
     def clean(self):
         super().clean()

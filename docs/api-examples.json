@@ -1,0 +1,77 @@
+{
+  "Event": {
+    "id": "12",
+    "title": "Встреча IT сообщества",
+    "description": "Доклады и знакомство",
+    "timezone": "Europe/Moscow",
+    "starts_at": "2026-11-07T07:00:00Z",
+    "ends_at": "2026-11-07T15:00:00Z",
+    "registration_opens_at": "2026-10-05T00:00:00Z",
+    "registration_closes_at": "2026-11-07T07:00:00Z",
+    "capacity": 100,
+    "status": "published",
+    "checkin_opens_at": "2026-11-07T06:00:00Z",
+    "owner_id": "1",
+    "created_at": "2026-10-05T09:00:00Z",
+    "updated_at": "2026-10-06T09:00:00Z",
+    "published_at": "2026-10-06T09:00:00Z",
+    "cancelled_at": null
+  },
+  "ProgramItem": {
+    "id": "21",
+    "event_room_id": "11",
+    "title": "Открытие",
+    "description": "Знакомство участников",
+    "speaker": "Ведущий",
+    "starts_at": "2026-11-07T07:00:00Z",
+    "ends_at": "2026-11-07T07:30:00Z"
+  },
+  "Registration": {
+    "id": "31",
+    "event_id": "12",
+    "user_id": "2",
+    "status": "active",
+    "created_at": "2026-10-14T09:00:00Z",
+    "activated_at": "2026-10-14T09:00:00Z",
+    "cancelled_at": null,
+    "ticket_id": "41",
+    "checked_in_at": null
+  },
+  "Ticket": {
+    "id": "41",
+    "registration_id": "31",
+    "event_id": "12",
+    "status": "active",
+    "token": "EXAMPLE_TOKEN_NOT_VALID",
+    "issued_at": "2026-10-14T09:00:00Z",
+    "revoked_at": null,
+    "checked_in_at": null
+  },
+  "CheckIn": {
+    "result": "accepted",
+    "check_in_id": "51",
+    "checked_in_at": "2026-11-07T06:30:00Z",
+    "participant": {
+      "full_name": "Тестовый участник"
+    },
+    "request_id": "6b731b3d-a78c-4b07-a1b0-90148e639cd2"
+  },
+  "Statistics": {
+    "event_id": "12",
+    "active_registrations": 3,
+    "unique_attendees": 2,
+    "scan_attempts": 5,
+    "attendance_rate": 66.7,
+    "calculated_at": "2026-11-07T15:00:00Z"
+  },
+  "Error": {
+    "code": "validation_error",
+    "message": "Проверьте заполненные поля.",
+    "field_errors": {
+      "ends_at": [
+        "Окончание должно быть позже начала."
+      ]
+    },
+    "request_id": "6b731b3d-a78c-4b07-a1b0-90148e639cd2"
+  }
+}
